@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>Verwaltungssoftware</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <canvas id="matrix"></canvas>
+  <div class="container">
+    <h1>Mitarbeiter-Management</h1>
+
+    <div class="tab-buttons">
+      <button id="tabAdd" class="active">Mitarbeiter anlegen</button>
+      <button id="tabManage">Mitarbeiter verwalten</button>
+    </div>
+
+    <div id="viewAdd" class="tab-content active">
+      <div class="form">
+        <label>Vorname</label>
+        <input id="vorname" type="text" placeholder="z. B. Mario">
+        <label>Nachname</label>
+        <input id="nachname" type="text" placeholder="z. B. Mendes">
+        <label>Urlaubstage</label>
+        <input id="urlaub" type="number" placeholder="z. B. 32">
+        <label>Krankheitstage</label>
+        <input id="krankheit" type="number" placeholder="z. B. 5">
+        <button id="btnAdd"> Anlegen</button>
+      </div>
+    </div>
+
+    <div id="viewManage" class="tab-content">
+      <table>
+        <thead>
+          <tr>
+            <th>Vorname</th>
+            <th>Nachname</th>
+            <th>Urlaub</th>
+            <th>Krankheit</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody id="employeeList"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
