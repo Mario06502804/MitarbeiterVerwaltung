@@ -7,9 +7,24 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <canvas id="matrix"></canvas>
+  <canvas id="matrix"></canvas>
+
+  <button id="logoutBtn" style="
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      border: 1px solid #00ffaa55;
+      background: #111;
+      color: #00ffaa;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 10;
+  ">Logout</button>
+
   <div class="container">
     <h1>Mitarbeiter-Management</h1>
+    <p id="userDisplay" style="color:#00ffaa99; margin-top:-10px;"></p>
 
     <div class="tab-buttons">
       <button id="tabAdd" class="active">Mitarbeiter anlegen</button>
@@ -26,7 +41,7 @@
         <input id="urlaub" type="number" placeholder="z. B. 32">
         <label>Krankheitstage</label>
         <input id="krankheit" type="number" placeholder="z. B. 5">
-        <button id="btnAdd"> Anlegen</button>
+        <button id="btnAdd">Anlegen</button>
       </div>
     </div>
 
@@ -45,6 +60,22 @@
       </table>
     </div>
   </div>
+
+  <script>
+    const session = JSON.parse(localStorage.getItem("session") || "null");
+    if (!session) {
+      window.location.href = "../Login/login.html";
+    } else {
+      document.getElementById("userDisplay").textContent = "Eingeloggt als: " + session.username;
+    }
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      if (confirm("Möchtest du dich wirklich abmelden?")) {
+        localStorage.removeItem("session");
+        window.location.href = "../Login/login.html";
+      }
+    });
+  </script>
 
   <script src="script.js"></script>
 </body>

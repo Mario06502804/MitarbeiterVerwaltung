@@ -1,0 +1,20 @@
+# Node modules (Abhängigkeiten, nicht nötig für GitHub)
+node_modules/
+
+# Build-Ordner (App-Ergebnisse, können neu gebaut werden)
+dist/
+out/
+
+# Temporäre oder Log-Dateien
+*.log
+*.tmp
+
+# Electron-Packager Builds
+Personalverwaltung-win32-x64/
+Personalverwaltung-linux-x64/
+Personalverwaltung-darwin-x64/
+
+# VSCode & System-Dateien
+.vscode/
+.DS_Store
+Thumbs.db

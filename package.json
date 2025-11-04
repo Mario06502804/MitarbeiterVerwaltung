@@ -1,0 +1,17 @@
+{
+  "name": "personalverwaltung-matrix-electron",
+  "version": "1.0.0",
+  "description": "Dieses Projekt ist eine kleine **Personalverwaltungssoftware im Browser**, kombiniert mit einem **Login- und Registrierungssystem**.  \r Die Oberfläche nutzt HTML, CSS und JavaScript mit einem Matrix-inspirierten Design.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "Mario Mendes",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "^39.0.0"
+  }
+}

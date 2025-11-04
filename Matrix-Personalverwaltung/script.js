@@ -4,7 +4,7 @@
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
-  let w, h, fontSize, columns, drops, offsets;
+  let w, h, fontSize, columns, drops;
   const glyphs =
     "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヰヱヲ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -14,22 +14,17 @@
     fontSize = Math.max(14, Math.floor(w / 90));
     columns = Math.floor(w / fontSize);
     drops = new Array(columns).fill(0);
-    offsets = new Array(columns).fill(0).map(() => Math.random() * 100); // ⏱️ zufälliger Start-Offset
     ctx.font = `${fontSize}px 'Share Tech Mono', monospace`;
   };
 
+  const bright = "#00ffcc";
+  const glow = "rgba(0,255,200,0.65)";
+  const trailDarken = "rgba(0,0,0,0.02)";
   let frame = 0;
-  const speedFactor = 8; // kleiner = schneller, größer = langsamer
-
-  // 🌈 Farb-Setup
-  const bright = "#00ffcc"; // Hauptfarbe – hellgrün/cyan wie Neo
-  const glow = "rgba(0,255,200,0.65)"; // weichere Trails
-  const trailDarken = "rgba(0,0,0,0.02)"; // Hintergrund-Verdunkelung
+  const speedFactor = 8;
 
   function draw() {
     frame++;
-
-    // Hintergrund abdunkeln (Trail-Verlängerung)
     ctx.fillStyle = trailDarken;
     ctx.fillRect(0, 0, w, h);
 
@@ -38,49 +33,34 @@
         const text = glyphs.charAt((Math.random() * glyphs.length) | 0);
         const x = i * fontSize;
         const y = drops[i] * fontSize;
-
-        // 💡 Leuchtende Farbe mit zufälligem Glühen
         const rand = Math.random();
-        if (rand > 0.985) {
-          ctx.fillStyle = bright; // sehr hell – Neonblitz
-        } else if (rand > 0.94) {
-          ctx.fillStyle = "rgba(0, 255, 174, 0.9)";
-        } else {
-          ctx.fillStyle = glow; // Trail
-        }
+        ctx.fillStyle =
+          rand > 0.985 ? bright :
+          rand > 0.94 ? "rgba(0,255,174,0.9)" :
+          glow;
 
         ctx.shadowColor = "#000000";
         ctx.shadowBlur = 100;
         ctx.fillText(text, x, y);
-
-        // Tropfen bewegen
         if (y > h && Math.random() > 0.975) {
           drops[i] = 0;
-          offsets[i] = Math.random() * 100; // neuer zufälliger Start
         } else {
-          drops[i] += 1;
+          drops[i]++;
         }
       }
     }
-
     requestAnimationFrame(draw);
   }
 
-  // Responsive Verhalten
-  let resizeTimer;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(resize, 150);
-  });
-
+  window.addEventListener("resize", resize);
   resize();
   draw();
 })();
 
-
+/* === Mitarbeiter-Verwaltung === */
 let employees = [];
 
-// Tabs
+// Tabs wechseln
 document.getElementById("tabAdd").addEventListener("click", () => switchTab("viewAdd", "tabAdd"));
 document.getElementById("tabManage").addEventListener("click", () => switchTab("viewManage", "tabManage"));
 
@@ -119,11 +99,8 @@ function clearInputs() {
 function renderEmployees() {
   const tbody = document.getElementById("employeeList");
   tbody.innerHTML = "";
-
   employees.forEach((emp, i) => {
     const tr = document.createElement("tr");
-    tr.draggable = true;
-    tr.dataset.index = i;
     tr.innerHTML = `
       <td>${emp.vorname}</td>
       <td>${emp.nachname}</td>
@@ -134,66 +111,22 @@ function renderEmployees() {
         <button onclick="deleteEmployee(${i})" title="Löschen"><span class="material-icons">delete</span></button>
       </td>
     `;
-
-    // Drag events
-    tr.addEventListener("dragstart", dragStart);
-    tr.addEventListener("dragover", dragOver);
-    tr.addEventListener("dragleave", dragLeave);
-    tr.addEventListener("drop", drop);
-    tr.addEventListener("dragend", dragEnd);
-
     tbody.appendChild(tr);
   });
 }
 
-// Mitarbeiter löschen
-function deleteEmployee(index) {
+function deleteEmployee(i) {
   if (confirm("Mitarbeiter wirklich löschen?")) {
-    employees.splice(index, 1);
+    employees.splice(i, 1);
     renderEmployees();
   }
 }
 
-// Mitarbeiter bearbeiten
-function editEmployee(index) {
-  const emp = employees[index];
+function editEmployee(i) {
+  const emp = employees[i];
   const urlaub = prompt("Neue Urlaubstage:", emp.urlaub);
   const krankheit = prompt("Neue Krankheitstage:", emp.krankheit);
   if (urlaub !== null) emp.urlaub = parseInt(urlaub) || 0;
   if (krankheit !== null) emp.krankheit = parseInt(krankheit) || 0;
   renderEmployees();
-}
-
-// --- Drag & Drop Logik ---
-let draggedIndex = null;
-
-function dragStart(e) {
-  draggedIndex = +this.dataset.index;
-  this.classList.add("dragging");
-  e.dataTransfer.effectAllowed = "move";
-}
-
-function dragOver(e) {
-  e.preventDefault();
-  this.classList.add("drop-target");
-}
-
-function dragLeave() {
-  this.classList.remove("drop-target");
-}
-
-function drop(e) {
-  e.preventDefault();
-  const targetIndex = +this.dataset.index;
-  this.classList.remove("drop-target");
-
-  if (draggedIndex === targetIndex) return;
-
-  const draggedItem = employees.splice(draggedIndex, 1)[0];
-  employees.splice(targetIndex, 0, draggedItem);
-  renderEmployees();
-}
-
-function dragEnd() {
-  this.classList.remove("dragging");
 }

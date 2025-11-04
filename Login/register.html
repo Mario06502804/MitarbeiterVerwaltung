@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrierung – Personalverwaltung</title>
+  <link rel="stylesheet" href="../Matrix-Personalverwaltung/style.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #0a0a0a;
+      color: #00ffaa;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .login-box {
+      background: rgba(17,17,17,0.8);
+      padding: 30px;
+      border-radius: 12px;
+      border: 1px solid #00ffaa55;
+      box-shadow: 0 0 15px #00ffaa44;
+      width: 300px;
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #00ffaa55;
+      background: #0f0f0f;
+      color: #00ffaa;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #00ffaa33;
+      color: #00ffaa;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #00ffaa55;
+    }
+    .message {
+      font-size: 0.9em;
+      margin-bottom: 10px;
+    }
+    a {
+      color: #00ffaa;
+      text-decoration: none;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Registrierung</h2>
+    <div id="msg" class="message"></div>
+    <input type="text" id="username" placeholder="Benutzername">
+    <input type="password" id="password" placeholder="Passwort">
+    <input type="password" id="password2" placeholder="Passwort wiederholen">
+    <button id="btnRegister">Registrieren</button>
+    <p style="margin-top:10px;">
+      Bereits ein Konto? <a href="login.html">Zum Login</a>
+    </p>
+  </div>
+
+  <script>
+    const USERS_KEY = "users";
+
+    document.getElementById("btnRegister").addEventListener("click", () => {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const password2 = document.getElementById("password2").value.trim();
+      const msg = document.getElementById("msg");
+
+      if (!username || !password || !password2) {
+        msg.textContent = "Bitte alle Felder ausfüllen.";
+        msg.style.color = "orange";
+        return;
+      }
+
+      if (password !== password2) {
+        msg.textContent = "Passwörter stimmen nicht überein!";
+        msg.style.color = "red";
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+      if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        msg.textContent = "Benutzername existiert bereits!";
+        msg.style.color = "red";
+        return;
+      }
+
+      users.push({ username, password });
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+      msg.textContent = "Registrierung erfolgreich! Du kannst dich jetzt einloggen.";
+      msg.style.color = "#00ffaa";
+      setTimeout(() => window.location.href = "login.html", 1000);
+    });
+  </script>
+</body>
+</html>
