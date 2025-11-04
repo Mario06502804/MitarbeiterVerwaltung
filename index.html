@@ -1,52 +1,92 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <title>Verwaltungssoftware</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="3; url=Login/login.html">
+  <title>Matrix Personalverwaltung – Login Weiterleitung</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #00ff00;
+      font-family: monospace;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    h1, p {
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+  </style>
 </head>
 <body>
-    <canvas id="matrix"></canvas>
-  <div class="container">
-    <h1>Mitarbeiter-Management</h1>
+  <canvas id="matrix"></canvas>
+  <h1>Matrix Personalverwaltung</h1>
+  <p>Leite weiter zur Login-Seite...</p>
+  <p><small>Falls du nicht automatisch weitergeleitet wirst, 
+  <a href="Login/login.html" style="color:#00ff00;">klicke hier</a>.</small></p>
 
-    <div class="tab-buttons">
-      <button id="tabAdd" class="active">Mitarbeiter anlegen</button>
-      <button id="tabManage">Mitarbeiter verwalten</button>
-    </div>
+  <script>
+    // Matrix Code Effekt
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
 
-    <div id="viewAdd" class="tab-content active">
-      <div class="form">
-        <label>Vorname</label>
-        <input id="vorname" type="text" placeholder="z. B. Mario">
-        <label>Nachname</label>
-        <input id="nachname" type="text" placeholder="z. B. Mendes">
-        <label>Urlaubstage</label>
-        <input id="urlaub" type="number" placeholder="z. B. 20">
-        <label>Krankheitstage</label>
-        <input id="krankheit" type="number" placeholder="z. B. 3">
-        <button id="btnAdd"> Anlegen</button>
-      </div>
-    </div>
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
 
-    <div id="viewManage" class="tab-content">
-      <table>
-        <thead>
-          <tr>
-            <th>Vorname</th>
-            <th>Nachname</th>
-            <th>Urlaub</th>
-            <th>Krankheit</th>
-            <th>Aktionen</th>
-          </tr>
-        </thead>
-        <tbody id="employeeList"></tbody>
-      </table>
-    </div>
-  </div>
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = [];
 
-  <script src="script.js"></script>
+    for (let x = 0; x < columns; x++) {
+      drops[x] = 1;
+    }
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#0F0";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        drops[i]++;
+      }
+    }
+
+    setInterval(draw, 35);
+  </script>
 </body>
 </html>
-
